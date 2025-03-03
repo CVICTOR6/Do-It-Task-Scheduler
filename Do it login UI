@@ -1,0 +1,40 @@
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { Lock, Mail } from "lucide-react";
+
+const LoginPage = () => {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="w-96 p-6 shadow-xl rounded-2xl bg-white">
+          <h2 className="text-2xl font-bold text-center mb-6">Do It - Log In</h2>
+          <CardContent>
+            <div className="mb-4 relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input type="email" placeholder="Email" className="pl-10" />
+            </div>
+            <div className="mb-6 relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input type="password" placeholder="Password" className="pl-10" />
+            </div>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+              Log In
+            </Button>
+            <p className="text-sm text-center text-gray-500 mt-4">
+              Don't have an account? <a href="#" className="text-blue-600">Sign Up</a>
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+};
+
+export default LoginPage;
