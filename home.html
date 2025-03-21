@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Home</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #0A2F4F;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        /* HEADER STYLING */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        /* New left-container to group logo and nav-links */
+        .left-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* LOGO */
+        .logo a {
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 8ch;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Nav Links */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #0A2F4F;
+            position: relative;
+            transition: color 0.3s, transform 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #3EA048;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #3EA048;
+            transform: translateY(-2px);
+        }
+
+        /* User Info (replacing toggle-container) */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .user-info .menu-icon {
+            font-size: 24px;
+            color: #0A2F4F;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .user-info .menu-icon:hover {
+            color: #3EA048;
+        }
+
+        .user-info .menu-icon.active {
+            color: #3EA048;
+        }
+
+        /* Sidebar Dropdown */
+        .sidebar {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            min-width: 200px;
+            z-index: 104;
+            padding: 15px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .sidebar.active {
+            display: block;
+        }
+
+        /* Sidebar Header */
+        .sidebar-header {
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A2F4F;
+            margin-bottom: 10px;
+        }
+
+        /* Sidebar Items */
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .sidebar-item:hover {
+            background: #f0f0f0;
+        }
+
+        .sidebar-item i {
+            font-size: 18px;
+            color: #0A2F4F;
+            margin-right: 10px;
+            transition: color 0.3s;
+        }
+
+        .sidebar-item:hover i {
+            color: #3EA048;
+        }
+
+        .sidebar-item a {
+            text-decoration: none;
+            color: #0A2F4F;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .sidebar-item a:hover {
+            color: #3EA048;
+        }
+
+        /* Sidebar Divider */
+        .sidebar-divider {
+            border: 0;
+            border-top: 1px solid #e0e0e0;
+            margin: 10px 0;
+        }
+
+        /* More Products Section */
+        .sidebar-more {
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content Container */
+        .container {
+            margin-top: 120px;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .hero-text {
+            text-align: left;
+            max-width: 500px;
+            opacity: 0;
+            transform: translateX(-100px);
+            animation: slideIn 1.5s ease-in-out forwards;
+        }
+
+        .hero-text h1 {
+            font-size: 42px;
+            color: #0A2F4F;
+            margin-bottom: 15px;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            color:  #0A2F4F;
+            margin-bottom: 20px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .cta-button {
+            background: #ffffff;
+            color: #3EA048;
+            border: 2px solid #3EA048;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .cta-button i {
+            color: #3EA048;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .cta-button:hover {
+            color: #3EA048;
+            border-color: #3EA048;
+        }
+
+        .cta-button:hover i {
+            color: #3EA048;
+        }
+
+        .cta-secondary {
+            border-color: #3EA048;
+        }
+
+        .cta-secondary:hover {
+            background: #ffffff;
+            color: #3EA048;
+            border-color: #3EA048;
+        }
+
+        .hero-image img {
+            width: 400px;
+            animation: fadeInUp 1.5s ease-in-out;
+           
+            border-radius: 15px;
+        }
+
+        /* Features Section */
+        .features {
+            margin-top: 50px;
+            padding: 50px 10%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-box {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .feature-box:hover {
+            transform: scale(1.05);
+            border-left: 5px solid #3EA048;
+        }
+
+        .feature-box i {
+            font-size: 40px;
+            color: #3EA048;
+            margin-bottom: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .feature-box:hover i {
+            color: #3EA048;
+        }
+
+        .feature-box h3 {
+            
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .feature-box p {
+            color: #0A2F4F;
+        }
+
+        /* White-to-Green Fading Effect for Each Feature Box */
+        .feature-box.simple-fast {
+            background: linear-gradient(to bottom, #ffffff 0%,#d4edda  100%); /* White to light green */
+        }
+
+        .feature-box.smart-scheduling {
+            background: linear-gradient(to bottom, #ffffff 0%, #d4edda  100%); /* White to a slightly darker light green */
+        }
+
+        .feature-box.insights-reports {
+            background: linear-gradient(to bottom, #ffffff 0%, #d4edda  100%); /* White to an even darker light green */
+        }
+
+        /* Pre-Footer Section */
+        .pre-footer {
+            margin-top: 50px;
+            padding: 40px 10%;
+            background: #ffffff;
+            border-top: 1px solid #ffffff;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 30px;
+            text-align: left;
+        }
+
+        .pre-footer-column {
+            padding: 0;
+        }
+
+        .pre-footer-column h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0A2F4F;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .pre-footer-item {
+            display: block;
+            padding: 5px 0;
+        }
+
+        .pre-footer-item a {
+            text-decoration: none;
+            color: #0A2F4F;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: color 0.3s;
+        }
+
+        .pre-footer-item a:hover {
+            color: #3EA048;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            background: #ffffff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top: 3px solid #3EA048;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 900px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                margin-right: 0;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .sidebar {
+                top: 35px;
+                min-width: 180px;
+            }
+
+            .hero {
+                flex-direction: column;
+                width: 90%;
+                padding: 30px;
+            }
+
+            .hero-text {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .hero-image img {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .pre-footer {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 20px 5%;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .logo img {
+                height: 5ch;
+            }
+
+            .nav-links {
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            .hero-text h1 {
+                font-size: 28px;
+            }
+
+            .hero-text p {
+                font-size: 16px;
+            }
+
+            .feature-box h3 {
+                font-size: 18px;
+            }
+
+            .sidebar {
+                min-width: 160px;
+            }
+
+            .sidebar-item i {
+                font-size: 16px;
+            }
+
+            .sidebar-item a {
+                font-size: 13px;
+            }
+
+            .sidebar-header, .sidebar-more {
+                font-size: 13px;
+            }
+
+            .pre-footer {
+                grid-template-columns: 1fr;
+                padding: 15px 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-container">
+            <div class="logo">
+                <a href="home.html">
+                    <img src="logo-transparent-png.jpg" alt="Task Manager Logo">
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="about-us.html">About Us</a>
+                <a href="contact-us.html">Help Center</a>
+            </nav>
+        </div>
+        <div class="user-info">
+            <i class="fas fa-th menu-icon" onclick="toggleSidebar(event)"></i>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <span>Explore</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-tasks"></i>
+                    <a href="features.html">Features</a>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-info-circle"></i>
+                    <a href="aboutus.html">About Us</a>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-address-book"></i>
+                    <a href="contact-us.html">Contacts</a>
+                </div>
+                <hr class="sidebar-divider">
+                <div class="sidebar-more">
+                    <span>More products</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-file-alt"></i>
+                    <a href="#">WorkForms</a>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-paint-brush"></i>
+                    <a href="#">WorkCanvas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Manage Your Tasks with Ease</h1>
+                <p>Boost your productivity and stay organized with our intuitive task management system.</p>
+                <div class="cta-buttons">
+                    <a href="signup.html" class="cta-button"><i class="fas fa-play"></i> Get Started</a>
+                    <a href="index.html" class="cta-button cta-secondary"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="task.png" alt="Task Manager Illustration">
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <div class="feature-box simple-fast">
+                <i class="fas fa-check"></i>
+                <h3>Simple & Fast</h3>
+                <p>Quickly add and manage tasks with an easy-to-use interface.</p>
+            </div>
+            <div class="feature-box smart-scheduling">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Smart Scheduling</h3>
+                <p>Automated reminders and scheduling to keep you on track.</p>
+            </div>
+            <div class="feature-box insights-reports">
+                <i class="fas fa-chart-line"></i>
+                <h3>Insights & Reports</h3>
+                <p>Get detailed reports on your task completion trends.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pre-Footer Section (Inspired by Monday.com) -->
+    <div class="pre-footer">
+        <div class="pre-footer-column">
+         
+        </div>
+        <div class="pre-footer-column">
+            <h3>Features</h3>
+            <div class="pre-footer-item"><a href="features.html">Docs</a></div>
+            <div class="pre-footer-item"><a href="features.html">Integrations</a></div>
+            <div class="pre-footer-item"><a href="features.html">Automations</a></div>
+            <div class="pre-footer-item"><a href="features.html">AI</a></div>
+            <div class="pre-footer-item"><a href="features.html">Dashboards</a></div>
+            <div class="pre-footer-item"><a href="contact-us.html">24/7 support</a></div>
+        </div>
+        <div class="pre-footer-column">
+            <h3>Use Cases</h3>
+            <div class="pre-footer-item"><a href="#">Educational</a></div>
+            <div class="pre-footer-item"><a href="#">Leisure</a></div>
+            <div class="pre-footer-item"><a href="#">Professional</a></div>
+            <div class="pre-footer-item"><a href="#">Developers</a></div>
+            <div class="pre-footer-item"><a href="#">HR</a></div>
+            <div class="pre-footer-item"><a href="#">IT</a></div>
+            <div class="pre-footer-item"><a href="#">Operations</a></div>
+            <div class="pre-footer-item"><a href="#">Construction</a></div>
+        </div>
+        <div class="pre-footer-column">
+            <h3>Company</h3>
+            <div class="pre-footer-item"><a href="aboutus.html">About us</a></div>
+            <div class="pre-footer-item"><a href="apply.html">Careers - We're hiring!</a></div>
+            <div class="pre-footer-item"><a href="#">Customer stories</a></div>
+            <div class="pre-footer-item"><a href="#">Become a partner</a></div>
+            <div class="pre-footer-item"><a href="#">Affiliates</a></div>
+
+        </div>
+        <div class="pre-footer-column">
+            <h3>Resources</h3>
+            <div class="pre-footer-item"><a href="contact-us.html">Help Center</a></div>
+            <div class="pre-footer-item"><a href="#">Community</a></div>
+            <div class="pre-footer-item"><a href="#">Blog</a></div>
+            <div class="pre-footer-item"><a href="#">What's new</a></div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer" style="background: #ffffff; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; max-width: 1200px; margin: auto;">
+            <!-- Left Section: Language & Certifications -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                    <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+                </div>
+            </div>
+
+            <!-- Center Section: Social Media Icons -->
+            <div style="display: flex; gap: 15px;">
+                <i class="fab fa-linkedin" style="font-size: 20px; cursor: pointer;"></i>
+                <i class="fab fa-facebook" style="font-size: 20px; cursor: pointer;"></i>
+                <i class="fab fa-youtube" style="font-size: 20px; cursor: pointer;"></i>
+                <i class="fab fa-x-twitter" style="font-size: 20px; cursor: pointer;"></i>
+                <i class="fab fa-instagram" style="font-size: 20px; cursor: pointer;"></i>
+                <i class="fab fa-tiktok" style="font-size: 20px; cursor: pointer;"></i>
+            </div>
+
+            <!-- Right Section: Privacy & App Links -->
+            <div style="text-align: right;">
+                <div style="font-size: 14px;">
+                    <a href="#" style="color: #0A2F4F; text-decoration: none; margin-right: 10px;">Security</a> |
+                    <a href="#" style="color: #0A2F4F; text-decoration: none; margin-right: 10px;">Terms and Privacy</a> |
+                    <a href="#" style="color: #0A2F4F; text-decoration: none; margin-right: 10px;">Privacy Policy</a> |
+                    <a href="#" style="color: #0A2F4F; text-decoration: none; margin-right: 10px;">Your Privacy Choices</a> |
+                    <a href="#" style="color: #0A2F4F; text-decoration: none;">Status</a>
+                </div>
+                <p style="font-size: 12px; color: #0A2F4F; margin-top: 5px;">All Rights Reserved © 2025 Task Manager</p>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+                    <img src="googleplay.png" alt="Google Play" style="height: 32px;">
+                    <img src="appstore.webp" alt="App Store" style="height: 32px;">
+                </div>
+                <div style="margin-top: 10px;">
+                    <a href="#" style="font-size: 12px; color: #0A2F4F; text-decoration: none;">Accessibility Statement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = "home.html";
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userFullName");
+            window.location.href = "index.html";
+        }
+
+        function toggleSidebar(event) {
+            event.stopPropagation();
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.querySelector('.menu-icon');
+            sidebar.classList.toggle('active');
+            menuIcon.classList.toggle('active');
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.querySelector('.menu-icon');
+
+            if (!sidebar.contains(event.target) && !menuIcon.contains(event.target)) {
+                sidebar.classList.remove('active');
+                menuIcon.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
