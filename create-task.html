@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task - Do It Task Scheduler</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #ffffff;
+            color: #333;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+
+        /* Header (Perfect Fit from Dashboard) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-bottom: 3px solid #0A2F4F;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .logo a {
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 5ch;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #0A2F4F;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links .back-btn {
+            background: #ffffff;
+            color: #4ABDAC;
+            border: 2px solid #4ABDAC;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links .back-btn:hover {
+            background: #ffffff;
+            color: #3EA048;
+            border-color: #3EA048;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #3EA048;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #3EA048;
+        }
+
+        /* Container for Image and Task Options */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            max-width: 1200px;
+            margin-top: 120px;
+        }
+
+        /* Left Section - Image */
+        .left-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: hidden;
+        }
+
+        .left-section img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 0;
+            border: none;
+        }
+
+        /* Right Section - Task Options */
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, p {
+            color: #0A2F4F;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            color: #4ABDAC;
+            margin-bottom: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .feature-card:hover i {
+            color: #3EA048;
+        }
+
+        .feature-card h3 {
+            color: #0A2F4F;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        /* Hide Frequency Selection Initially */
+        #frequency-selection {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 900px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+                font-size: 14px;
+            }
+
+            .nav-links .back-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .container {
+                flex-direction: column;
+                width: 90%;
+                margin-top: 100px;
+            }
+
+            .left-section {
+                margin-bottom: 20px;
+            }
+
+            .left-section img {
+                max-width: 300px;
+            }
+
+            .right-section {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .nav-links {
+                flex-direction: row;
+                gap: 8px;
+                font-size: 12px;
+            }
+
+            .logo img {
+                height: 5ch;
+            }
+
+            .nav-links .back-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .feature-card h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">
+            <a href="home.html">
+                <img src="logo-transparent-png.png" alt="Task Manager Logo">
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="back-btn" onclick="goBack()">⬅ Back</a>
+            <a href="features.html">Features</a>
+            <a href="about-us.html">About Us</a>
+            <a href="contact-us.html">Contact</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Section with Image -->
+        <div class="left-section">
+            <img src="managemanage.avif" alt="Task Management Illustration">
+        </div>
+
+        <!-- Right Section with Vertical Task Options -->
+        <div class="right-section">
+            <p>Choose a task category to proceed.</p>
+
+            <!-- Task Categories Grid -->
+            <div class="features-grid" id="category-grid">
+                <div class="feature-card" onclick="showFrequencies('educational')">
+                    <i class="fas fa-book"></i>
+                    <h3>Educational</h3>
+                </div>
+                <div class="feature-card" onclick="showFrequencies('leisure')">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Leisure</h3>
+                </div>
+                <div class="feature-card" onclick="showFrequencies('professional')">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Professional</h3>
+                </div>
+            </div>
+
+            <!-- Task Frequency Selection Grid -->
+            <div class="features-grid" id="frequency-selection">
+                <h2>Select Task Frequency</h2>
+                <p>How often do you want to do this task?</p>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="selectFrequency('daily')">
+                        <i class="fas fa-calendar-day"></i>
+                        <h3>Daily</h3>
+                    </div>
+                    <div class="feature-card" onclick="selectFrequency('weekly')">
+                        <i class="fas fa-calendar-week"></i>
+                        <h3>Weekly</h3>
+                    </div>
+                    <div class="feature-card" onclick="selectFrequency('monthly')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Monthly</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCategory = "";
+
+        function goBack() {
+            window.location.href = "dashboard.html";
+        }
+
+        function showFrequencies(category) {
+            selectedCategory = category;
+            document.getElementById("frequency-selection").style.display = "block";
+            document.getElementById("category-grid").style.display = "none"; // Hide category grid
+        }
+
+        function selectFrequency(frequency) {
+            window.location.href = `add-task.html?category=${selectedCategory}&frequency=${frequency}`;
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userFullName");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
