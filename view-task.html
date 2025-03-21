@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Tasks - Do It Task Scheduler</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #ffffff; /* Changed to white background */
+            color: #333; /* Changed to dark gray for body text */
+            padding: 20px;
+            position: relative;
+            margin: 0;
+        }
+
+        h1 {
+            color: #0A2F4F; /* Dark blue for headings, matching About Us */
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        p {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            background: #4ABDAC; /* Teal base color */
+            color: white;
+            border: none;
+            padding: 10px 20px; /* Increased padding for consistency */
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px; /* Rounded corners */
+            transition: background 0.3s ease-in-out;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #3EA048; /* Green hover color */
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            color: #0A2F4F;
+        }
+
+        /* Task Container */
+        .task-container {
+            background: white; /* Solid white for readability */
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%; /* Adjusted for better fit */
+            margin: 20px auto;
+            color: #333; /* Body text color */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow like About Us */
+            text-align: left;
+        }
+
+        /* Task Item */
+        .task-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9; /* Light gray background */
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .task-item.completed {
+            background: rgba(62, 160, 72, 0.1); /* Lighter green for completed tasks */
+            text-decoration: line-through;
+            color: #444; /* Slightly darker text for completed tasks */
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 15px; /* Consistent padding */
+            border: none;
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .complete-btn {
+            background: #4ABDAC; /* Teal base color */
+            color: white;
+        }
+
+        .complete-btn:hover {
+            background: #3EA048; /* Green hover color */
+        }
+
+        .delete-btn {
+            background: #ff4c4c; /* Red base color for delete */
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #cc0000; /* Darker red hover */
+        }
+
+        .undo-btn {
+            background: #4ABDAC; /* Teal base color */
+            color: white;
+            margin: 5px;
+        }
+
+        .undo-btn:hover {
+            background: #3EA048; /* Green hover color */
+        }
+
+        /* Priority */
+        .priority {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .high {
+            background: #ff4c4c; /* Red for high priority */
+            color: white;
+        }
+
+        .medium {
+            background: #ffcc00; /* Yellow for medium priority */
+            color: black;
+        }
+
+        .low {
+            background: #3EA048; /* Green for low priority */
+            color: white;
+        }
+
+        /* No Tasks Message */
+        .no-tasks {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .task-desc {
+            font-style: italic;
+            font-size: 14px;
+            color: #444;
+            margin-top: 5px;
+        }
+
+        .undo-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 900px) {
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .task-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .task-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            select {
+                width: 100%;
+                padding: 8px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            .task-item {
+                padding: 10px;
+            }
+
+            .task-container {
+                padding: 15px;
+            }
+
+            .undo-container {
+                flex-direction: column;
+            }
+
+            .undo-btn {
+                width: 100%;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+    <h1>📋 View Tasks</h1>
+    <p>Manage your tasks efficiently.</p>
+
+    <div class="filter-section">
+        <label for="task-filter">Filter by Frequency:</label>
+        <select id="task-filter" onchange="loadTasks()">
+            <option value="all">All Tasks</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+    </div>
+
+    <div class="task-container" id="task-list">
+        <p class="no-tasks">Loading tasks...</p>
+    </div>
+
+    <div class="undo-container">
+        <button class="undo-btn" onclick="undoComplete()">Undo Complete</button>
+        <button class="undo-btn" onclick="undoDelete()">Undo Delete</button>
+    </div>
+
+    <script>
+        let lastDeletedTask = null;
+        let lastDeletedIndex = null;
+        let lastCompletedTask = null;
+        let lastCompletedIndex = null;
+
+        function goBack() {
+            window.location.href = "dashboard.html";
+        }
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let taskList = document.getElementById("task-list");
+            let filter = document.getElementById("task-filter").value;
+            taskList.innerHTML = "";
+
+            let filteredTasks = tasks.filter(task => filter === "all" || task.frequency === filter);
+
+            if (filteredTasks.length === 0) {
+                taskList.innerHTML = '<p class="no-tasks">No tasks found for this filter.</p>';
+                return;
+            }
+
+            filteredTasks.forEach((task, index) => {
+                let priorityClass = task.priority === "high" ? "high" : task.priority === "medium" ? "medium" : "low";
+                let priorityText = task.priority === "high" ? "🔴 High" : task.priority === "medium" ? "🟡 Medium" : "🔵 Low";
+
+                let taskElement = document.createElement("div");
+                taskElement.className = "task-item";
+                if (task.completed) {
+                    taskElement.classList.add("completed");
+                }
+
+                taskElement.innerHTML = `
+                    <div class="task-info">
+                        <strong>${task.name}</strong> (${task.category} - ${task.frequency})<br>
+                        <span class="task-desc">📄 ${task.description}</span><br>
+                        ⏳ ${new Date(task.deadline).toLocaleDateString()} <br>
+                        <span class="priority ${priorityClass}">${priorityText}</span>
+                    </div>
+                    <div class="task-actions">
+                        <button class="complete-btn" onclick="markAsCompleted(${index})">✅ Complete</button>
+                        <button class="delete-btn" onclick="deleteTask(${index})">❌ Delete</button>
+                    </div>
+                `;
+
+                taskList.appendChild(taskElement);
+            });
+        }
+
+        function markAsCompleted(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            lastCompletedTask = { ...tasks[index] };
+            lastCompletedIndex = index;
+
+            tasks[index].completed = true;
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        function deleteTask(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            lastDeletedTask = { ...tasks[index] }; // Save the task before deletion
+            lastDeletedIndex = index;              // Save the index
+            tasks.splice(index, 1);                // Remove the task
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        function undoComplete() {
+            if (lastCompletedTask !== null) {
+                let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                tasks[lastCompletedIndex].completed = false;
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                loadTasks();
+                lastCompletedTask = null;
+            }
+        }
+
+        function undoDelete() {
+            if (lastDeletedTask !== null) {
+                let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                tasks.splice(lastDeletedIndex, 0, lastDeletedTask);
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                loadTasks();
+                lastDeletedTask = null;
+            }
+        }
+
+        loadTasks();
+    </script>
+</body>
+</html>
