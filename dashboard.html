@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Do It Task Scheduler</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll during animations */
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
+            transition: background 0.3s ease;
+        }
+
+        /* New left-container to group logo and nav-links */
+        .left-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo a {
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 8ch;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1) rotate(5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #0A2F4F;
+            position: relative;
+            transition: color 0.3s, transform 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #3EA048;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #3EA048;
+            transform: translateY(-2px);
+        }
+
+        /* User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .user-info .profile-icon {
+            font-size: 24px;
+            color: #3EA048;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s ease;
+        }
+
+        .user-info .profile-icon:hover {
+            color: #3EA048;
+        }
+
+        .user-info .notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FFC107;
+            color: #ffffff;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .user-info #user-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0A2F4F;
+            margin-right: 10px;
+            transition: color 0.3s;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 150px;
+            z-index: 101;
+            padding: 10px 0;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .profile-dropdown.active {
+            display: block;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #0A2F4F;
+            font-weight: 500;
+            transition: color 0.3s, background 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            color: #3EA048;
+            background: #f0f0f0;
+        }
+
+        .profile-dropdown::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent #ffffff transparent;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            max-width: 1200px;
+            margin-top: 120px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 0.5s;
+        }
+
+        /* Left Section - Image */
+        .left-section img {
+            width: 400px;
+            border-radius: 0;
+            transition: transform 0.3s ease;
+        }
+
+        /* Right Section - Task Options */
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .right-section h2 {
+            color: #0A2F4F;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: linear-gradient(to bottom, #ffffff 0%, #e6f4ea 100%); /* White-to-green gradient */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            animation: popIn 0.5s ease-out forwards; /* Entrance animation */
+        }
+
+        /* Staggered animations for each card */
+        .feature-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.1) rotate(2deg); /* Enhanced hover scale and rotation */
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow on hover */
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            color: #3EA048;
+            margin-bottom: 15px;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Icon color transition */
+        }
+
+        .feature-card:hover i {
+            color: #2E7D32; /* Darker green on hover */
+            transform: scale(1.2); /* Slight icon scale on hover */
+        }
+
+        .feature-card h3 {
+            color: #0A2F4F;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            background: #ffffff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-content div {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-content a {
+            color: #0A2F4F;
+            text-decoration: none;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .footer-content p {
+            font-size: 12px;
+            color: #0A2F4F;
+            margin-top: 5px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 900px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .user-info #user-name {
+                font-size: 14px;
+            }
+
+            .user-info .profile-icon {
+                font-size: 20px;
+            }
+
+            .profile-dropdown {
+                top: 35px;
+            }
+
+            .container {
+                flex-direction: column;
+                width: 90%;
+                margin-top: 100px;
+            }
+
+            .left-section img {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .right-section {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .nav-links {
+                flex-direction: row;
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            .logo img {
+                height: 5ch;
+            }
+
+            .right-section h2 {
+                font-size: 20px;
+            }
+
+            .user-info {
+                gap: 5px;
+            }
+
+            .user-info #user-name {
+                font-size: 12px;
+            }
+
+            .user-info .profile-icon {
+                font-size: 18px;
+            }
+
+            .feature-card h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="left-container">
+            <div class="logo">
+                <a href="home.html">
+                    <img src="logo-transparent-png.jpg" alt="Task Manager Logo">
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="features.html">Features</a>
+                <a href="about-us.html">About Us</a>
+                <a href="contact-us.html">Help Center</a>
+            </nav>
+        </div>
+        <div class="user-info">
+            <span id="user-name"></span>
+            <i class="fas fa-user-circle profile-icon" onclick="toggleProfileDropdown(event)"></i>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="profile.html">View Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
+                <a href="contact-us.html">Help/Support</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Section with Image -->
+        <div class="left-section">
+            <img src="createtasks.avif" alt="Task Illustration">
+        </div>
+
+        <!-- Right Section with Vertical Task Options -->
+        <div class="right-section">
+            <h2>Welcome to Your Dashboard</h2>
+            <div class="features-grid">
+                <div class="feature-card" onclick="location.href='create-task.html'">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Create Task</h3>
+                </div>
+                <div class="feature-card" onclick="location.href='view-task.html'">
+                    <i class="fas fa-eye"></i>
+                    <h3>View Tasks</h3>
+                </div>
+                <div class="feature-card" onclick="location.href='manage-task.html'">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Manage Tasks</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Consolidated function to check authentication and display full name
+        function checkAuth() {
+            let token = localStorage.getItem("token");
+            let fullName = localStorage.getItem("userFullName");
+
+            if (!token || !fullName) {
+                alert("You are not logged in!");
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("user-name").innerText = "Hello, " + fullName;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userFullName");
+            window.location.href = "index.html";
+        }
+
+        function toggleProfileDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const profileIcon = document.querySelector('.profile-icon');
+            if (!dropdown.contains(event.target) && !profileIcon.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Call the function to check authentication on page load
+        checkAuth();
+    </script>
+</body>
+</html>
